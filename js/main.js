@@ -481,6 +481,104 @@ function initPerformanceOptimizations() {
 }
 
 // ============================================
+// PREVIEW POPUP - HOVER LARGE IMAGE
+// ============================================
+function initPreviewPopup() {
+    const workCards = document.querySelectorAll('.work-card');
+    const imageCache = new Map();
+    let showTimeout;
+    let hideTimeout;
+    
+    // Preload all preview images
+    workCards.forEach(card => {
+        const previewPopup = card.querySelector('.preview-popup');
+        if (!previewPopup) return;
+        
+        const previewImg = previewPopup.querySelector('img');
+        const imgSrc = previewImg.src;
+        
+        // Cache image
+        if (!imageCache.has(imgSrc)) {
+            const img = new Image();
+            img.src = imgSrc;
+            imageCache.set(imgSrc, img);
+        }
+    });
+    
+    workCards.forEach(card => {
+        const previewPopup = card.querySelector('.preview-popup');
+        if (!previewPopup) return;
+        
+        const previewImg = previewPopup.querySelector('img');
+        const imgSrc = previewImg.src;
+        
+        card.addEventListener('mouseenter', (e) => {
+            clearTimeout(hideTimeout);
+            
+            // Delay showing preview to avoid flickering
+            showTimeout = setTimeout(() => {
+                const rect = card.getBoundingClientRect();
+                
+                // Set initial position
+                previewPopup.style.left = (rect.right + 20) + 'px';
+                previewPopup.style.top = rect.top + 'px';
+                
+                // Show preview
+                previewPopup.style.display = 'block';
+                
+                // Small delay for CSS transition
+                requestAnimationFrame(() => {
+                    previewPopup.style.opacity = '1';
+                    previewPopup.style.transform = 'scale(1)';
+                });
+            }, 200);
+        });
+        
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const imgRect = previewImg.getBoundingClientRect();
+            
+            // Calculate position (right side of card)
+            let left = rect.right + 20;
+            let top = e.clientY - (imgRect.height / 2);
+            
+            // Prevent going off screen
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // If preview would go off right edge, show on left side
+            if (left + imgRect.width > windowWidth - 20) {
+                left = rect.left - imgRect.width - 20;
+            }
+            
+            // Prevent going off top or bottom
+            if (top < 20) {
+                top = 20;
+            } else if (top + imgRect.height > windowHeight - 20) {
+                top = windowHeight - imgRect.height - 20;
+            }
+            
+            previewPopup.style.left = left + 'px';
+            previewPopup.style.top = top + 'px';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            clearTimeout(showTimeout);
+            
+            // Delay hiding to allow moving to adjacent cards
+            hideTimeout = setTimeout(() => {
+                previewPopup.style.opacity = '0';
+                previewPopup.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    previewPopup.style.display = 'none';
+                }, 300);
+            }, 100);
+        });
+    });
+}
+
+// ============================================
 // INITIALIZE ALL
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -495,6 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initWorkCardInteractions();
     initSmoothScroll();
     initPerformanceOptimizations();
+    initPreviewPopup();
     
     // Initialize scroll animations after a short delay
     setTimeout(() => {

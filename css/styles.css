@@ -334,3 +334,74 @@ html {
     background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
     opacity: 0.3;
 }
+
+/* Masonry Grid Layout */
+.masonry-grid {
+    column-count: 1;
+    column-gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 1024px) {
+    .masonry-grid {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 1280px) {
+    .masonry-grid {
+        column-count: 4;
+    }
+}
+
+.work-card {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+}
+
+.work-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Preview Popup - Hover Large Image */
+.preview-popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    background: var(--cyber-dark);
+    padding: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    border: 2px solid transparent;
+}
+
+.preview-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.preview-popup img {
+    max-width: 600px;
+    max-height: 600px;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
