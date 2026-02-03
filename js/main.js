@@ -689,6 +689,43 @@ function initCarousel() {
 }
 
 // ============================================
+// CRT MODE TOGGLE
+// ============================================
+function initCRTToggle() {
+    const crtToggle = document.getElementById('crt-toggle');
+    const crtGlitch = document.getElementById('crt-glitch');
+    if (!crtToggle || !crtGlitch) return;
+    
+    // Check localStorage for saved state
+    const savedState = localStorage.getItem('crtMode');
+    if (savedState === 'true') {
+        document.body.classList.add('crt-active');
+        crtToggle.textContent = 'CRT: ON';
+    }
+    
+    // Add click event listener
+    crtToggle.addEventListener('click', () => {
+        // Trigger glitch effect
+        crtGlitch.classList.add('active');
+        
+        // Remove active class after animation
+        setTimeout(() => {
+            crtGlitch.classList.remove('active');
+        }, 500);
+        
+        // Toggle CRT mode
+        document.body.classList.toggle('crt-active');
+        
+        // Update button text
+        const isActive = document.body.classList.contains('crt-active');
+        crtToggle.textContent = isActive ? 'CRT: ON' : 'CRT: OFF';
+        
+        // Save state to localStorage
+        localStorage.setItem('crtMode', isActive);
+    });
+}
+
+// ============================================
 // INITIALIZE ALL
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -705,6 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPerformanceOptimizations();
     initPreviewPopup();
     initCarousel();
+    initCRTToggle();
     
     // Initialize scroll animations after a short delay
     setTimeout(() => {
