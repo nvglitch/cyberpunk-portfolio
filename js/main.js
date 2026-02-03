@@ -643,6 +643,15 @@ function initCarousel() {
         const slideWidth = slideItems[0].offsetWidth;
         slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
         
+        // Update progress bar widths
+        progressBars.forEach((bar, index) => {
+            if (index === currentIndex) {
+                bar.style.width = '96px'; // Normal width
+            } else {
+                bar.style.width = '48px'; // Half width
+            }
+        });
+        
         // Clear intervals and restart
         startSlideShow();
     }
