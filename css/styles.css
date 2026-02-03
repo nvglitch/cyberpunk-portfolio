@@ -335,6 +335,59 @@ html {
     opacity: 0.3;
 }
 
+/* Carousel Styles */
+#carousel {
+    position: relative;
+}
+
+#carousel .carousel-slides {
+    position: relative;
+}
+
+#carousel .carousel-slide {
+    position: relative;
+}
+
+/* Carousel Navigation Arrows */
+.carousel-arrow {
+    transition: all 0.3s ease;
+}
+
+.carousel-arrow:hover {
+    border-color: var(--cyber-green);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Carousel Progress Bars */
+.carousel-progress {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.progress-bar {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.progress-bar:hover {
+    background: rgba(57, 255, 20, 0.2);
+}
+
+/* Carousel Container */
+#carousel .relative {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#carousel .relative:hover {
+    border-color: var(--cyber-green);
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+}
+
 /* Masonry Grid Layout */
 .masonry-grid {
     column-count: 1;

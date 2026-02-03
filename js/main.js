@@ -579,6 +579,107 @@ function initPreviewPopup() {
 }
 
 // ============================================
+// CAROUSEL FUNCTIONALITY
+// ============================================
+function initCarousel() {
+    const carousel = document.getElementById('carousel');
+    if (!carousel) return;
+    
+    const slides = document.querySelector('.carousel-slides');
+    const slideItems = document.querySelectorAll('.carousel-slide');
+    const progressBars = document.querySelectorAll('.progress-bar');
+    const progressFills = document.querySelectorAll('.progress-fill');
+    const arrows = document.querySelectorAll('.carousel-arrow');
+    
+    let currentIndex = 0;
+    let slideInterval;
+    let progressInterval;
+    const slideDuration = 10000; // 10 seconds per slide
+    
+    // Initialize
+    updateSlide();
+    startSlideShow();
+    
+    // Start slide show
+    function startSlideShow() {
+        // Clear existing intervals
+        if (slideInterval) clearInterval(slideInterval);
+        if (progressInterval) clearInterval(progressInterval);
+        
+        slideInterval = setInterval(nextSlide, slideDuration);
+        startProgressAnimation();
+    }
+    
+    // Start progress animation
+    function startProgressAnimation() {
+        // Clear existing interval
+        if (progressInterval) clearInterval(progressInterval);
+        
+        // Reset all progress bars
+        progressFills.forEach((fill, index) => {
+            if (index === currentIndex) {
+                fill.style.width = '0%';
+            } else {
+                fill.style.width = '0%';
+            }
+        });
+        
+        // Animate current progress bar
+        let progress = 0;
+        const progressSpeed = (slideDuration / 100);
+        
+        progressInterval = setInterval(() => {
+            progress += 1;
+            if (progress <= 100) {
+                progressFills[currentIndex].style.width = progress + '%';
+            } else {
+                clearInterval(progressInterval);
+            }
+        }, progressSpeed);
+    }
+    
+    // Update slide position
+    function updateSlide() {
+        const slideWidth = slideItems[0].offsetWidth;
+        slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        
+        // Clear intervals and restart
+        startSlideShow();
+    }
+    
+    // Go to next slide
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slideItems.length;
+        updateSlide();
+    }
+    
+    // Go to previous slide
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slideItems.length) % slideItems.length;
+        updateSlide();
+    }
+    
+    // Add arrow click events
+    arrows.forEach(arrow => {
+        arrow.addEventListener('click', () => {
+            if (arrow.classList.contains('left')) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        });
+    });
+    
+    // Add progress bar click events
+    progressBars.forEach((bar, index) => {
+        bar.addEventListener('click', () => {
+            currentIndex = index;
+            updateSlide();
+        });
+    });
+}
+
+// ============================================
 // INITIALIZE ALL
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -594,6 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initPerformanceOptimizations();
     initPreviewPopup();
+    initCarousel();
     
     // Initialize scroll animations after a short delay
     setTimeout(() => {
