@@ -85,15 +85,15 @@ function initCustomCursor() {
         mouseY = e.clientY;
     });
     
-    // Smooth cursor following
+    // Immediate cursor response (no inertia)
     function animateCursor() {
-        // Cursor dot (fast response)
-        cursorX += (mouseX - cursorX) * 0.2;
-        cursorY += (mouseY - cursorY) * 0.2;
+        // Cursor dot (immediate response)
+        cursorX = mouseX;
+        cursorY = mouseY;
         
-        // Cursor ring (slight delay)
-        ringX += (mouseX - ringX) * 0.1;
-        ringY += (mouseY - ringY) * 0.1;
+        // Cursor ring (immediate response)
+        ringX = mouseX;
+        ringY = mouseY;
         
         cursor.style.left = cursorX - 12 + 'px';
         cursor.style.top = cursorY - 12 + 'px';
