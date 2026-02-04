@@ -566,12 +566,6 @@ body.crt-active #crt-toggle:hover {
     margin-bottom: 1.5rem;
 }
 
-.work-card img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
 /* Preview Popup - Hover Large Image */
 .preview-popup {
     display: none;

@@ -494,8 +494,16 @@ function initPreviewPopup() {
         const previewPopup = card.querySelector('.preview-popup');
         if (!previewPopup) return;
         
+        const thumbImg = card.querySelector('img');
+        if (!thumbImg) return;
+        
+        const imgSrc = thumbImg.src;
+        
+        // Update preview image src to match thumbnail
         const previewImg = previewPopup.querySelector('img');
-        const imgSrc = previewImg.src;
+        if (previewImg) {
+            previewImg.src = imgSrc;
+        }
         
         // Cache image
         if (!imageCache.has(imgSrc)) {
@@ -509,8 +517,10 @@ function initPreviewPopup() {
         const previewPopup = card.querySelector('.preview-popup');
         if (!previewPopup) return;
         
-        const previewImg = previewPopup.querySelector('img');
-        const imgSrc = previewImg.src;
+        const thumbImg = card.querySelector('img');
+        if (!thumbImg) return;
+        
+        const imgSrc = thumbImg.src;
         
         card.addEventListener('mouseenter', (e) => {
             clearTimeout(hideTimeout);
@@ -743,6 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPreviewPopup();
     initCarousel();
     initCRTToggle();
+    initFullscreenPreview();
     
     // Initialize scroll animations after a short delay
     setTimeout(() => {
@@ -762,3 +773,58 @@ window.addEventListener('resize', () => {
         ScrollTrigger.refresh();
     }, 250);
 });
+
+// ============================================
+// FULLSCREEN IMAGE PREVIEW
+// ============================================
+function initFullscreenPreview() {
+    const fullscreenPreview = document.getElementById('fullscreen-preview');
+    const previewImage = document.getElementById('preview-image');
+    const closePreview = document.getElementById('close-preview');
+    const workCards = document.querySelectorAll('.work-card');
+    
+    if (!fullscreenPreview || !previewImage || !closePreview) return;
+    
+    // Open preview
+    function openPreview(imageSrc) {
+        previewImage.src = imageSrc;
+        fullscreenPreview.style.opacity = '1';
+        fullscreenPreview.style.pointerEvents = 'auto';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close preview
+    function closePreviewFunc() {
+        fullscreenPreview.style.opacity = '0';
+        fullscreenPreview.style.pointerEvents = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Add click event to work cards
+    workCards.forEach(card => {
+        const img = card.querySelector('img');
+        if (img) {
+            card.addEventListener('click', () => {
+                // Always use the thumbnail image src for preview
+                openPreview(img.src);
+            });
+        }
+    });
+    
+    // Close button click event
+    closePreview.addEventListener('click', closePreviewFunc);
+    
+    // Click outside to close
+    fullscreenPreview.addEventListener('click', (e) => {
+        if (e.target === fullscreenPreview) {
+            closePreviewFunc();
+        }
+    });
+    
+    // ESC key to close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && fullscreenPreview.style.opacity === '1') {
+            closePreviewFunc();
+        }
+    });
+}
